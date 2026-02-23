@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "Trade Tracker - Customers",
+    "description": "Customer API for Trade Tracker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "customerId",
+      "value": "507f1f77bcf86cd799439011"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"phone\": \"+1 555-123-4567\"\n}"
+        },
+        "url": "{{baseUrl}}/customers"
+      }
+    },
+    {
+      "name": "Get all customers",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/customers"
+      }
+    },
+    {
+      "name": "Get customer by ID",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/customers/{{customerId}}"
+      }
+    },
+    {
+      "name": "Update customer",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Smith\",\n  \"phone\": \"+1 555-999-0000\"\n}"
+        },
+        "url": "{{baseUrl}}/customers/{{customerId}}"
+      }
+    },
+    {
+      "name": "Delete customer",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/customers/{{customerId}}"
+      }
+    }
+  ]
+}
