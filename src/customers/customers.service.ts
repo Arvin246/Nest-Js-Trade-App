@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Customer, CustomerDocument } from './schemas/customer.schema';
@@ -48,5 +52,38 @@ export class CustomersService {
     if (!result) {
       throw new NotFoundException(`Customer with ID ${id} not found`);
     }
+  }
+
+  async findByIdentity(
+    email?: string,
+    phone?: string,
+  ): Promise<CustomerDocument | null> {
+    if (!email && !phone) {
+      throw new BadRequestException(
+        'Provide email or phone to look up customer',
+      );
+    }
+    if (email) {
+      return this.customerModel.findOne({ email }).exec();
+    }
+    return this.customerModel.findOne({ phone }).exec();
+  }
+
+  async recordTradeStats(
+    customerId: Types.ObjectId,
+    amountPaid: number,
+  ): Promise<void> {
+    await this.customerModel
+      .updateOne(
+        { _id: customerId },
+        { $inc: { totalPaid: amountPaid, timesVisited: 1 } },
+      )
+      .exec();
+    await this.customerModel
+      .updateOne(
+        { _id: customerId, firstSaleDate: { $exists: false } },
+        { $set: { firstSaleDate: new Date() } },
+      )
+      .exec();
   }
 }

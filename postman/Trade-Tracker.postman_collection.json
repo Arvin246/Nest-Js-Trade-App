@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "Trade Tracker API",
+    "description": "Phase 1 (Customers) + Phase 2 (Trades). Set baseUrl to your server (e.g. http://localhost:3000).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "customerId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": "{{baseUrl}}/customers",
+            "description": "Create a new customer (Phase 1)."
+          }
+        },
+        {
+          "name": "List all customers",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/customers",
+            "description": "Get all customers. Response includes totalPaid, timesVisited, firstSaleDate after trades."
+          }
+        },
+        {
+          "name": "Get customer by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/customers/{{customerId}}",
+            "description": "Get one customer. Set customerId in collection/request (e.g. from create or list response)."
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Smith\",\n  \"phone\": \"+0987654321\"\n}"
+            },
+            "url": "{{baseUrl}}/customers/{{customerId}}",
+            "description": "Partial update. Only send fields to change."
+          }
+        },
+        {
+          "name": "Delete customer",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/customers/{{customerId}}",
+            "description": "Delete customer by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trades",
+      "item": [
+        {
+          "name": "Process trade (existing customer by email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane@example.com\",\n  \"deviceName\": \"iPhone 12\",\n  \"amountPaid\": 250\n}"
+            },
+            "url": "{{baseUrl}}/trades",
+            "description": "Finds customer by email, creates trade, updates customer totalPaid/timesVisited/firstSaleDate."
+          }
+        },
+        {
+          "name": "Process trade (existing customer by phone)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\",\n  \"deviceName\": \"MacBook Air\",\n  \"amountPaid\": 600\n}"
+            },
+            "url": "{{baseUrl}}/trades",
+            "description": "Finds customer by phone, creates trade, updates stats."
+          }
+        },
+        {
+          "name": "Process trade (new customer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"new@example.com\",\n  \"name\": \"New Customer\",\n  \"phone\": \"+1111111111\",\n  \"deviceName\": \"iPad\",\n  \"amountPaid\": 400\n}"
+            },
+            "url": "{{baseUrl}}/trades",
+            "description": "No customer with this email/phone → creates customer then creates trade. Name and email required for new customer."
+          }
+        },
+        {
+          "name": "List all trades",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/trades",
+            "description": "All trades, newest first."
+          }
+        },
+        {
+          "name": "List trades by customer",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/trades?customerId={{customerId}}",
+            "description": "Trades for one customer. Set customerId variable (MongoDB ObjectId)."
+          }
+        }
+      ]
+    }
+  ]
+}

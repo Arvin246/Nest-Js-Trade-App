@@ -13,6 +13,15 @@ export class Customer {
 
   @Prop()
   phone?: string;
+
+  @Prop({ default: 0 })
+  totalPaid: number;
+
+  @Prop({ default: 0 })
+  timesVisited: number;
+
+  @Prop()
+  firstSaleDate?: Date;
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
