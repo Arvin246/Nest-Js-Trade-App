@@ -1,0 +1,315 @@
+{
+  "info": {
+    "name": "Trade Tracker API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "App",
+      "item": [
+        {
+          "name": "Hello World",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/",
+            "description": "Returns a Hello World message from the root endpoint."
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "description": "Returns the health status of the API server."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": "{{baseUrl}}/customers",
+            "description": "Creates a new customer with name, email, and phone."
+          }
+        },
+        {
+          "name": "List All Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/customers",
+            "description": "Retrieves a list of all customers."
+          }
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "MongoDB ObjectId of the customer"
+                }
+              ]
+            },
+            "description": "Retrieves a single customer by their MongoDB ObjectId."
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+0987654321\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "MongoDB ObjectId of the customer"
+                }
+              ]
+            },
+            "description": "Partially updates an existing customer's details by ID."
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "MongoDB ObjectId of the customer"
+                }
+              ]
+            },
+            "description": "Deletes a customer by their MongoDB ObjectId."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trades",
+      "item": [
+        {
+          "name": "Create Trade",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"phone\": \"+1234567890\",\n  \"name\": \"John Doe\",\n  \"deviceName\": \"iPhone 14\",\n  \"amountPaid\": 250\n}"
+            },
+            "url": "{{baseUrl}}/trades",
+            "description": "Creates a trade. Auto-creates a new customer if not found by email/phone. At least one of email or phone is required. `name` is required for new customers."
+          }
+        },
+        {
+          "name": "List All Trades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/trades",
+              "host": ["{{baseUrl}}"],
+              "path": ["trades"],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "",
+                  "description": "Optional. MongoDB ObjectId to filter trades by customer.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves all trades. Optionally filter by customerId."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Customers by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports?startDate=2024-01-01&endDate=2024-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01",
+                  "description": "Required. Start date in ISO format (e.g. 2024-01-01)."
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31",
+                  "description": "Required. End date in ISO format (e.g. 2024-12-31)."
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Optional. Number of results (1-500, default 100).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns customers who made trades within the specified date range."
+          }
+        },
+        {
+          "name": "Top Customers by Revenue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/top-customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "top-customers"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Optional. Number of top customers to return (1-100, default 10).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns the top customers ranked by total revenue generated."
+          }
+        },
+        {
+          "name": "Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "summary"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "",
+                  "description": "Optional. Number of past days to include in the summary (1-365).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns a high-level dashboard summary of trades and revenue."
+          }
+        },
+        {
+          "name": "Sales by Period",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/sales-by-period",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "sales-by-period"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "Optional. Start date in ISO format.",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "Optional. End date in ISO format.",
+                  "disabled": true
+                },
+                {
+                  "key": "groupBy",
+                  "value": "day",
+                  "description": "Optional. Group results by 'day' or 'month' (default: day).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns aggregated sales data grouped by day or month within an optional date range."
+          }
+        },
+        {
+          "name": "Top Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/top-devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "top-devices"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Optional. Number of top devices to return (1-100, default 10).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns the most frequently traded device models."
+          }
+        }
+      ]
+    }
+  ]
+}

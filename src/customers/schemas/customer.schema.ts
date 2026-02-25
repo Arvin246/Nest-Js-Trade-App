@@ -25,3 +25,4 @@ export class Customer {
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
+CustomerSchema.index({ totalPaid: -1 });

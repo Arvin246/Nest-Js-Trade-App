@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Trade Tracker API",
-    "description": "Phase 1 (Customers) + Phase 2 (Trades). Set baseUrl to your server (e.g. http://localhost:3000).",
+    "description": "Phase 1 (Customers) + Phase 2 (Trades) + Phase 3 (Reports). Set baseUrl to your server (e.g. http://localhost:3000).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -120,6 +120,90 @@
             "method": "GET",
             "url": "{{baseUrl}}/trades?customerId={{customerId}}",
             "description": "Trades for one customer. Set customerId variable (MongoDB ObjectId)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Top customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reports/top-customers?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "top-customers"],
+              "query": [
+                { "key": "limit", "value": "10", "description": "Optional, default 10, max 100" }
+              ]
+            },
+            "description": "Returns name, totalPaid, devicesSold, firstSaleDate. Sorted by totalPaid descending."
+          }
+        },
+        {
+          "name": "Customers by date range",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reports?startDate=2025-01-01&endDate=2025-12-31&limit=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports"],
+              "query": [
+                { "key": "startDate", "value": "2025-01-01", "description": "Required, ISO 8601" },
+                { "key": "endDate", "value": "2025-12-31", "description": "Required, ISO 8601" },
+                { "key": "limit", "value": "100", "description": "Optional, max 500" }
+              ]
+            },
+            "description": "Customers who had at least one trade in [startDate, endDate] with in-range totalPaid and devicesSold."
+          }
+        },
+        {
+          "name": "Dashboard summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reports/summary?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "summary"],
+              "query": [
+                { "key": "days", "value": "30", "description": "Optional; limit stats to last N days (1-365)" }
+              ]
+            },
+            "description": "Total customers, total revenue, total trades. Omit days for all-time stats."
+          }
+        },
+        {
+          "name": "Sales by period",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reports/sales-by-period?groupBy=day",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "sales-by-period"],
+              "query": [
+                { "key": "startDate", "value": "2025-01-01", "description": "Optional" },
+                { "key": "endDate", "value": "2025-12-31", "description": "Optional" },
+                { "key": "groupBy", "value": "day", "description": "day or month" }
+              ]
+            },
+            "description": "Revenue and count by day or month. Good for charts."
+          }
+        },
+        {
+          "name": "Top devices",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reports/top-devices?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "top-devices"],
+              "query": [
+                { "key": "limit", "value": "10", "description": "Optional, default 10, max 100" }
+              ]
+            },
+            "description": "Most sold device names with count."
           }
         }
       ]

@@ -16,3 +16,5 @@ export class Trade {
 }
 
 export const TradeSchema = SchemaFactory.createForClass(Trade);
+TradeSchema.index({ createdAt: 1 });
+TradeSchema.index({ customerId: 1, createdAt: 1 });

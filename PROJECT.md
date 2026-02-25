@@ -6,7 +6,7 @@
 
 ---
 
-## Phase 1: Foundation & Customers (Current)
+## Phase 1: Foundation & Customers
 
 - [x] **Project setup**
   - NestJS app with TypeScript
@@ -50,10 +50,30 @@ npm run test
 
 ---
 
-## Later phases (placeholder)
+## Phase 2: Trades
 
-- **Phase 2:** Trades (or similar) resource, linking to customers if needed.
-- **Phase 3:** Extra resources, auth, or reporting as per product needs.
+- [x] **Trade resource** linked to Customer (customerId, deviceName, amountPaid)
+- [x] APIs: `POST /trades`, `GET /trades` (optional `?customerId`)
+- [x] Customer stats updated on trade creation (totalPaid, timesVisited, firstSaleDate)
+
+---
+
+## Phase 3: Reporting & Dashboard
+
+- [x] **Reports module** at `GET /reports/...` with aggregation-based endpoints
+- [x] **Indexes:** Customer `{ totalPaid: -1 }`; Trade `{ createdAt: 1 }`, `{ customerId: 1, createdAt: 1 }`
+- [x] **Endpoints:**
+
+| Method | Path | Description |
+|--------|------|--------------|
+| GET | /reports/top-customers | Top customers by total paid (Name, Total Paid, Devices Sold, First Sale Date). Query: `limit` (optional, default 10, max 100) |
+| GET | /reports | Customers by date range: who had at least one trade in [startDate, endDate] with in-range totals. Query: `startDate`, `endDate` (required, ISO 8601), `limit` (optional, max 500) |
+| GET | /reports/summary | Dashboard summary: total customers, total revenue, total trades. Query: `days` (optional) to limit to last N days |
+| GET | /reports/sales-by-period | Revenue and volume by day or month. Query: `startDate`, `endDate` (optional), `groupBy` (day \| month) |
+| GET | /reports/top-devices | Most sold device names. Query: `limit` (optional, default 10, max 100) |
+
+- [x] **Validation:** DTOs with class-validator for query params (dates, limit bounds)
+- [x] **Performance:** Match-before-group in aggregations; denormalized Customer stats for top-customers
 
 ---
 
